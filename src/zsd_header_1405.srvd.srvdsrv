@@ -1,0 +1,6 @@
+@EndUserText.label: 'Service Definition - Sales Order Header'
+define service ZSD_HEADER_1405 {
+  expose ZC_HEADER_1405   as Header;
+  expose ZC_ITEM_1405     as Item;
+  expose ZI_STATUSVH_1405 as StatusVH;
+}

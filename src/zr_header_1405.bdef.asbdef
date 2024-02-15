@@ -1,0 +1,72 @@
+managed;
+strict ( 2 );
+
+define behavior for ZR_HEADER_1405 alias Header
+implementation in class zcl_header_1405 unique
+persistent table zheader_1405
+lock master
+authorization master ( global, instance )
+//etag master <field_name>
+{
+  // CUD
+  create ( precheck );
+  update ( precheck );
+  delete;
+
+  // Associations
+  association _Item { create ( features : instance, authorization : update ); }
+
+  // Field features
+  field ( readonly ) Id;
+  field ( mandatory ) Email, FirstName, LastName, CreatedOn, OrderStatus;
+
+  // Table mapping
+  mapping for zheader_1405
+    {
+      Id           = id;
+      Email        = email;
+      FirstName    = first_name;
+      LastName     = last_name;
+      Country      = country;
+      CreatedOn    = created_on;
+      DeliveryDate = delivery_date;
+      OrderStatus  = order_status;
+      ImageUrl     = image_url;
+    }
+}
+
+define behavior for ZR_ITEM_1405 alias Item
+implementation in class zcl_item_1405 unique
+persistent table zitem_1405
+lock dependent by _Header
+authorization dependent by _Header
+//etag master <field_name>
+{
+  // CUD
+  update;
+  delete;
+
+  // Associations
+  association _Header;
+
+  // Field features
+  field ( readonly ) Id, HeaderId;
+  field ( mandatory ) Name, Description, ReleaseDate, Price, Height, Width, Depth, Quantity, UnitOfMeasure;
+
+  // Table mapping
+  mapping for zitem_1405
+    {
+      Id               = id;
+      HeaderId         = header_id;
+      Name             = name;
+      Description      = description;
+      ReleaseDate      = releasedate;
+      DiscontinuedDate = discontinueddate;
+      Price            = price;
+      Height           = height;
+      Width            = width;
+      Depth            = depth;
+      Quantity         = quantity;
+      UnitOfMeasure    = unitofmeasure;
+    }
+}

@@ -1,0 +1,18 @@
+interface;
+
+define behavior for ZI_HEADER_1405 alias ZR_HEADER_1405
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Item { create; }
+}
+
+define behavior for ZI_ITEM_1405 alias ZR_ITEM_1405
+{
+  use update;
+  use delete;
+
+  use association _Header;
+}

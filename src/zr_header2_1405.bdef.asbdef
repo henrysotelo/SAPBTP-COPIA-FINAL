@@ -1,0 +1,97 @@
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_HEADER2_1405 alias Header
+implementation in class zcl_header2_1405 unique
+persistent table zheader_1405
+draft table zheader_d_1405
+lock master
+total etag LastChangedAt
+authorization master ( global, instance )
+etag master LocalLastChangedAt
+{
+  // CUD
+  create ( precheck );
+  update ( precheck );
+  delete;
+
+  // Associations
+  association _Item { create ( features : instance, authorization : update ); with draft; }
+
+  // Field features
+  field ( numbering : managed, readonly:update ) UUID;
+  field ( readonly:update, mandatory:create ) Id;
+  field ( mandatory ) Email;
+
+  // Validations
+  validation validateEmail on save { create; update; field Email; }
+
+  // Draft actions
+  draft action Resume with additional implementation;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+
+  draft determine action Prepare {
+    validation validateEmail;
+  }
+
+  // Table mapping
+  mapping for zheader_1405
+    {
+      UUID               = UUID;
+      Id                 = id;
+      Email              = email;
+      FirstName          = first_name;
+      LastName           = last_name;
+      Country            = country;
+      CreatedOn          = created_on;
+      DeliveryDate       = delivery_date;
+      OrderStatus        = order_status;
+      ImageUrl           = image_url;
+      LastChangedAt      = last_changed_at;
+      LocalCreatedAt     = local_created_at;
+      LocalCreatedBy     = local_created_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LocalLastChangedBy = local_last_changed_by;
+    }
+}
+
+define behavior for ZR_ITEM2_1405 alias Item
+implementation in class zcl_item_1405 unique
+persistent table zitem_1405
+draft table zitem_d_1405
+lock dependent by _Header
+authorization dependent by _Header
+etag master LocalLastChangedAt
+{
+  // CUD
+  update;
+  delete;
+
+  // Associations
+  association _Header  { with draft; }
+
+  // Field features
+  field ( numbering : managed, readonly : update ) UUID;
+  field ( readonly: update ) Id, HeaderUUID;
+
+  // Table mapping
+  mapping for zitem_1405
+    {
+      UUID             = UUID;
+      Id               = id;
+      HeaderUUID       = header_uuid;
+      Name             = name;
+      Description      = description;
+      ReleaseDate      = releasedate;
+      DiscontinuedDate = discontinueddate;
+      Price            = price;
+      Height           = height;
+      Width            = width;
+      Depth            = depth;
+      Quantity         = quantity;
+      UnitOfMeasure    = unitofmeasure;
+    }
+}

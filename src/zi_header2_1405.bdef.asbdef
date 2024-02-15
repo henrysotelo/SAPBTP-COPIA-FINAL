@@ -1,0 +1,25 @@
+interface;
+use draft;
+
+define behavior for ZI_HEADER2_1405 alias ZR_HEADER2_1405
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Resume;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+
+  use association _Item { create; with draft; }
+}
+
+define behavior for ZI_ITEM2_1405 alias ZR_ITEM2_1405
+{
+  use update;
+  use delete;
+
+  use association _Header { with draft; }
+}
